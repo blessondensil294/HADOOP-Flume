@@ -1,0 +1,74 @@
+Hadoop FLUME 
+- To collecting, aggregating and move large amount of streaming data to HDFS
+- Logs, events from various sources(network traffic, social media)
+- capture data from various web servers to HDFS
+- Simple and flexible architecture based on streaming data
+- fault tolerant
+- backup
+- reliabily mechanism for failure recovery
+- easily integrate with HADOOP
+
+Advantages
+- Scalable
+- Reliable
+- Fault Tolerance
+- Centralized data Storage
+- data ingestion
+- Large dataset
+- Multiple hop flows
+- Real time streaming data
+- Source & destination
+
+FLUME components
+	Source - Accept the data from incoming stream and stores in channel
+	Channel- reading speed is faster than writing speed, acts as a buffer, to prevent data from loss. 
+			acts as a local storage or temporary storage between source of data and persistent data in HDFS
+	Sink - collects data from channel and commits/write data in HDFS
+
+
+Twitter data Streaming Using FLUME
+
+1) goto https://apps.twitter.com
+2) create a developer account
+3) Choose apps 
+4) create an apps
+5) Appname: TwitterDataStreaming
+	Description: 
+	Website URL
+	App usage
+6) Click on create
+7) Goto keys and tokens --> to pass the data to flume config files
+	Consumer API keys
+	Access tokens
+	
+8) Goto terminal prompt in collabera
+9) cs $FLUME_HOME
+10) sudo gedit flume.conf
+	Source=Twitter
+	channels=MemChannel
+	sinks=HDFS
+	Twitter.type=org.apache.flume.soource.twitter.TwitterSource
+	Twitter.channels=MemChannel
+	
+	Twitter.consumerkey=
+	Twitter.consumerSecret=
+	Twitter.accessToken=
+	Twitter.accessTokenSecret=
+	**Twitter.keywords= lowes, lowesindia
+	
+	HDFS.channel=MemChannel
+	HDFS.type=hdfs
+	HDFS.hdfs.path=hdfs://localhost:9000/Flume_tweets
+	hdfs.filetype=DataStream
+	hdfs.writeformat=Text
+	batchSize=1000
+	rollsize=0
+	rollcount=1000
+	rollinterval=600
+	memchannel.type=memory
+	memchannel.capacity=10000
+	memchannel.transactioncapacity=100
+11) save file and close
+12) flume-ng agent --conf conf --conf-file /home/flume.conf --name TwitterAgent -Dflume.root.logger=DEBUG.console
+13) HDFS path in the cmd prompt
+	hdfs://localhost:9000/FLUME_tweets/FLUMEData.145235432.tmp
